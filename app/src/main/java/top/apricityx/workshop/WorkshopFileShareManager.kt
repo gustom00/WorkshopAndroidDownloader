@@ -5,7 +5,10 @@ import android.net.Uri
 import java.net.URLConnection
 
 object WorkshopFileShareManager {
-    fun createShareFileIntent(file: ExportedDownloadFile): Intent? {
+    fun createShareFileIntent(
+        file: ExportedDownloadFile,
+        chooserTitle: String = "Share file",
+    ): Intent? {
         val uri = runCatching { Uri.parse(file.contentUri) }
             .getOrNull()
             ?.takeIf { it.toString().isNotBlank() }
@@ -18,7 +21,7 @@ object WorkshopFileShareManager {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
-        return Intent.createChooser(shareIntent, "分享文件").apply {
+        return Intent.createChooser(shareIntent, chooserTitle).apply {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
     }

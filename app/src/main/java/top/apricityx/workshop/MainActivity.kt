@@ -26,6 +26,8 @@ import coil.compose.LocalImageLoader
 import top.apricityx.workshop.data.WorkshopBrowseItem
 import top.apricityx.workshop.data.WorkshopRequiredItem
 import top.apricityx.workshop.ui.component.DownloadDependencyWarningDialog
+import top.apricityx.workshop.ui.LocalWorkshopLanguage
+import top.apricityx.workshop.ui.localizeUiText
 import top.apricityx.workshop.ui.screen.WorkshopScreen
 import top.apricityx.workshop.ui.screen.WorkshopScreenActions
 import top.apricityx.workshop.ui.theme.SteamWorkshopDemoTheme
@@ -43,11 +45,10 @@ class MainActivity : ComponentActivity() {
             val items = pendingDownloadItems.takeIf { it.isNotEmpty() } ?: return@registerForActivityResult
             pendingDownloadItems = emptyList()
             if (!granted) {
-                Toast.makeText(
-                    this,
+                showToast(
                     "未授予存储权限，下载完成后将导出到应用专用目录。",
                     Toast.LENGTH_LONG,
-                ).show()
+                )
             }
             continueStartingDownloads(items)
         }
@@ -56,11 +57,10 @@ class MainActivity : ComponentActivity() {
             val items = pendingDownloadItems.takeIf { it.isNotEmpty() } ?: return@registerForActivityResult
             pendingDownloadItems = emptyList()
             if (!granted) {
-                Toast.makeText(
-                    this,
+                showToast(
                     "未授予通知权限，后台下载通知可能不会显示。",
                     Toast.LENGTH_LONG,
-                ).show()
+                )
             }
             if (!workshopViewModel.downloadItems(items)) {
                 clearPendingDownloads(items)
@@ -84,13 +84,14 @@ class MainActivity : ComponentActivity() {
                 themeMode = uiState.themeMode,
                 frontendMode = uiState.frontendMode,
             ) {
-                CompositionLocalProvider(LocalImageLoader provides workshopViewModel.workshopImageLoader) {
+                CompositionLocalProvider(LocalWorkshopLanguage provides uiState.appLanguage) {
+                    CompositionLocalProvider(LocalImageLoader provides workshopViewModel.workshopImageLoader) {
                     LaunchedEffect(uiState.themeMode) {
                         applySystemNightMode(uiState.themeMode)
                     }
                     LaunchedEffect(Unit) {
                         workshopViewModel.toastMessages.collect { message ->
-                            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+                            showToast(message)
                         }
                     }
                     LaunchedEffect(activeDownloadItemKeys) {
@@ -124,6 +125,7 @@ class MainActivity : ComponentActivity() {
                                 startDownloadItemsWithCompatibilityGuard(listOf(item))
                             },
                         )
+                    }
                     }
                 }
             }
@@ -208,9 +210,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun openExportedFile(file: ExportedDownloadFile) {
-        val intent = WorkshopFileOpenManager.createOpenFileIntent(file)
+        val intent = WorkshopFileOpenManager.createOpenFileIntent(
+            file = file,
+            chooserTitle = localizedFileChooserTitle("打开文件"),
+        )
         if (intent == null) {
-            Toast.makeText(this, "暂无可打开文件", Toast.LENGTH_SHORT).show()
+            showToast("暂无可打开文件")
             return
         }
 
@@ -222,9 +227,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun shareExportedFile(file: ExportedDownloadFile) {
-        val intent = WorkshopFileShareManager.createShareFileIntent(file)
+        val intent = WorkshopFileShareManager.createShareFileIntent(
+            file = file,
+            chooserTitle = localizedFileChooserTitle("分享文件"),
+        )
         if (intent == null) {
-            Toast.makeText(this, "暂无可分享文件", Toast.LENGTH_SHORT).show()
+            showToast("暂无可分享文件")
             return
         }
 
@@ -238,13 +246,16 @@ class MainActivity : ComponentActivity() {
     private fun shareDownloadTaskDebugLog(task: DownloadCenterTaskUiState) {
         val file = downloadDebugLogManager.shareableFile(task)
         if (file == null) {
-            Toast.makeText(this, "调试日志还没有生成", Toast.LENGTH_SHORT).show()
+            showToast("调试日志还没有生成")
             return
         }
 
-        val intent = WorkshopFileShareManager.createShareFileIntent(file)
+        val intent = WorkshopFileShareManager.createShareFileIntent(
+            file = file,
+            chooserTitle = localizedFileChooserTitle("分享文件"),
+        )
         if (intent == null) {
-            Toast.makeText(this, "暂无可分享调试日志", Toast.LENGTH_SHORT).show()
+            showToast("暂无可分享调试日志")
             return
         }
 
@@ -258,13 +269,16 @@ class MainActivity : ComponentActivity() {
     private fun shareRuntimeAppLog() {
         val file = AppRuntimeLogManager.shareableLatestLogFile(application)
         if (file == null) {
-            Toast.makeText(this, "运行日志还没有生成", Toast.LENGTH_SHORT).show()
+            showToast("运行日志还没有生成")
             return
         }
 
-        val intent = WorkshopFileShareManager.createShareFileIntent(file)
+        val intent = WorkshopFileShareManager.createShareFileIntent(
+            file = file,
+            chooserTitle = localizedFileChooserTitle("分享文件"),
+        )
         if (intent == null) {
-            Toast.makeText(this, "暂无可分享运行日志", Toast.LENGTH_SHORT).show()
+            showToast("暂无可分享运行日志")
             return
         }
 
@@ -278,13 +292,16 @@ class MainActivity : ComponentActivity() {
     private fun openRuntimeAppLog() {
         val file = AppRuntimeLogManager.shareableLatestLogFile(application)
         if (file == null) {
-            Toast.makeText(this, "运行日志还没有生成", Toast.LENGTH_SHORT).show()
+            showToast("运行日志还没有生成")
             return
         }
 
-        val intent = WorkshopFileOpenManager.createOpenFileIntent(file)
+        val intent = WorkshopFileOpenManager.createOpenFileIntent(
+            file = file,
+            chooserTitle = localizedFileChooserTitle("打开文件"),
+        )
         if (intent == null) {
-            Toast.makeText(this, "暂无可打开运行日志", Toast.LENGTH_SHORT).show()
+            showToast("暂无可打开运行日志")
             return
         }
 
@@ -299,12 +316,15 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val file = AppRuntimeLogManager.shareableLogBundle(application)
             if (file == null) {
-                Toast.makeText(this@MainActivity, "日志包生成失败", Toast.LENGTH_SHORT).show()
+                showToast("日志包生成失败")
                 return@launch
             }
-            val intent = WorkshopFileShareManager.createShareFileIntent(file)
+            val intent = WorkshopFileShareManager.createShareFileIntent(
+                file = file,
+                chooserTitle = localizedFileChooserTitle("分享文件"),
+            )
             if (intent == null) {
-                Toast.makeText(this@MainActivity, "暂无可分享日志包", Toast.LENGTH_SHORT).show()
+                showToast("暂无可分享日志包")
                 return@launch
             }
             launchIntent(
@@ -319,14 +339,13 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val file = AppRuntimeLogManager.exportLogBundle(application)
             if (file == null) {
-                Toast.makeText(this@MainActivity, "导出日志包失败", Toast.LENGTH_SHORT).show()
+                showToast("导出日志包失败")
                 return@launch
             }
-            Toast.makeText(
-                this@MainActivity,
+            showToast(
                 "日志包已导出到 ${file.userVisiblePath}",
                 Toast.LENGTH_LONG,
-            ).show()
+            )
         }
     }
 
@@ -430,6 +449,7 @@ class MainActivity : ComponentActivity() {
             onUpdateThemeMode = workshopViewModel::updateThemeMode,
             onUpdateFrontendMode = workshopViewModel::updateFrontendMode,
             onUpdateSteamLanguagePreference = workshopViewModel::updateSteamLanguagePreference,
+            onUpdateAppLanguage = workshopViewModel::updateAppLanguage,
             onOpenBaiduTranslationApiKeyScreen = workshopViewModel::openBaiduTranslationApiKeyScreen,
             onUpdateBaiduTranslationAppIdInput = workshopViewModel::updateBaiduTranslationAppIdInput,
             onUpdateBaiduTranslationApiKeyInput = workshopViewModel::updateBaiduTranslationApiKeyInput,
@@ -480,9 +500,20 @@ class MainActivity : ComponentActivity() {
             startActivity(intent)
         }.onFailure { error ->
             val message = if (error is ActivityNotFoundException) notFoundMessage else failureMessage
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            showToast(message)
         }
     }
+
+    private fun showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(
+            this,
+            localizeUiText(message, workshopViewModel.uiState.value.appLanguage),
+            duration,
+        ).show()
+    }
+
+    private fun localizedFileChooserTitle(source: String): String =
+        localizeUiText(source, workshopViewModel.uiState.value.appLanguage)
 }
 
 private data class DownloadDependencyWarningDialogState(

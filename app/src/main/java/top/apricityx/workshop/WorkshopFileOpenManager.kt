@@ -5,7 +5,10 @@ import android.net.Uri
 import java.net.URLConnection
 
 object WorkshopFileOpenManager {
-    fun createOpenFileIntent(file: ExportedDownloadFile): Intent? {
+    fun createOpenFileIntent(
+        file: ExportedDownloadFile,
+        chooserTitle: String = "Open file",
+    ): Intent? {
         val uri = runCatching { Uri.parse(file.contentUri) }
             .getOrNull()
             ?.takeIf { it.toString().isNotBlank() }
@@ -17,7 +20,7 @@ object WorkshopFileOpenManager {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
-        return Intent.createChooser(viewIntent, "打开文件").apply {
+        return Intent.createChooser(viewIntent, chooserTitle).apply {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
     }

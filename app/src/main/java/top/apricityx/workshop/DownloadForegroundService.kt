@@ -13,6 +13,7 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import top.apricityx.workshop.ui.localizeUiText
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.app.ServiceCompat
@@ -121,6 +122,7 @@ class DownloadForegroundService : Service() {
     }
 
     private fun buildNotification(snapshot: DownloadForegroundNotificationSnapshot): Notification {
+        val appLanguage = DownloadSettingsRepository(this).getAppLanguage()
         val contentIntent = PendingIntent.getActivity(
             this,
             0,
@@ -131,14 +133,14 @@ class DownloadForegroundService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
         val style = NotificationCompat.InboxStyle().also { inbox ->
-            snapshot.lines.forEach(inbox::addLine)
+            snapshot.lines.forEach { inbox.addLine(localizeUiText(it, appLanguage)) }
         }
 
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_download_notification)
-            .setContentTitle(snapshot.title)
-            .setContentText(snapshot.text)
-            .setSubText(snapshot.subText)
+            .setContentTitle(localizeUiText(snapshot.title, appLanguage))
+            .setContentText(localizeUiText(snapshot.text, appLanguage))
+            .setSubText(snapshot.subText?.let { localizeUiText(it, appLanguage) })
             .setStyle(style)
             .setProgress(snapshot.progressMax, snapshot.progress, snapshot.progressIndeterminate)
             .setContentIntent(contentIntent)
@@ -168,10 +170,13 @@ class DownloadForegroundService : Service() {
         val manager = getSystemService(NotificationManager::class.java) ?: return
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
-            "后台下载",
+            localizeUiText("后台下载", DownloadSettingsRepository(this).getAppLanguage()),
             NotificationManager.IMPORTANCE_LOW,
         ).apply {
-            description = "显示创意工坊下载进度并保持后台下载"
+            description = localizeUiText(
+                "显示创意工坊下载进度并保持后台下载",
+                DownloadSettingsRepository(this@DownloadForegroundService).getAppLanguage(),
+            )
             setShowBadge(false)
         }
         manager.createNotificationChannel(channel)

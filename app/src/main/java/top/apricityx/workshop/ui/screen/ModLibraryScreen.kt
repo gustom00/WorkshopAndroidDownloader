@@ -1,5 +1,7 @@
 package top.apricityx.workshop.ui.screen
 
+import top.apricityx.workshop.ui.localizedUiText
+
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -43,7 +45,7 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import top.apricityx.workshop.ui.LocalizedText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -497,7 +499,7 @@ private fun ModLibrarySummaryCard(
         ) {
             Icon(
                 imageVector = Icons.Default.Refresh,
-                contentDescription = "检查模组更新",
+                contentDescription = localizedUiText("检查模组更新"),
             )
             Text(
                 text = if (state.updateCheckState.isChecking) "正在检查更新" else "检查模组更新",

@@ -1,4 +1,6 @@
 package top.apricityx.workshop.ui.screen
+
+import top.apricityx.workshop.ui.localizedUiText
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import top.apricityx.workshop.ui.LocalizedText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -578,7 +580,7 @@ private fun WorkshopDetailHeaderImage(
         if (thumbnailUrl.isNotBlank()) {
             AsyncImage(
                 model = thumbnailUrl,
-                contentDescription = contentDescription,
+                contentDescription = localizedUiText(contentDescription),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
@@ -588,7 +590,7 @@ private fun WorkshopDetailHeaderImage(
         if (resolvedFullImageUrl != null && resolvedFullImageUrl != thumbnailUrl) {
             AsyncImage(
                 model = resolvedFullImageUrl,
-                contentDescription = contentDescription,
+                contentDescription = localizedUiText(contentDescription),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )

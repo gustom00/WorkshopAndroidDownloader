@@ -1,5 +1,7 @@
 package top.apricityx.workshop.ui.screen
 
+import top.apricityx.workshop.ui.localizedUiText
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
@@ -23,7 +25,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import top.apricityx.workshop.ui.LocalizedText as Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import top.apricityx.workshop.AppFrontendMode
+import top.apricityx.workshop.AppLanguage
 import top.apricityx.workshop.AppThemeMode
 import top.apricityx.workshop.DownloadSettingsRepository
 import top.apricityx.workshop.SettingsUiState
@@ -90,6 +93,7 @@ fun SettingsScreen(
     onFrontendModeSelected: (AppFrontendMode) -> Unit,
     onThemeModeSelected: (AppThemeMode) -> Unit,
     onSteamLanguagePreferenceSelected: (SteamLanguagePreference) -> Unit,
+    onAppLanguageSelected: (AppLanguage) -> Unit,
     onOpenBaiduTranslationApiKeyScreen: () -> Unit,
     onAutoCheckUpdatesChanged: (Boolean) -> Unit,
     onPreferredUpdateSourceSelected: (UpdateSource) -> Unit,
@@ -302,6 +306,21 @@ fun SettingsScreen(
                 optionLabel = AppThemeMode::displayName,
                 onOptionSelected = onThemeModeSelected,
             )
+            }
+
+            SettingsSectionCard {
+                Text("App language", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    "Choose the language used by the app. This does not change the language of Steam Workshop content.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                SettingsChoiceDropdown(
+                    selectedOption = state.selectedAppLanguage,
+                    options = AppLanguage.entries,
+                    optionLabel = AppLanguage::displayName,
+                    onOptionSelected = onAppLanguageSelected,
+                )
             }
 
             SettingsSectionCard {
@@ -750,7 +769,7 @@ private fun <T> SettingsChoiceDropdown(
             )
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "展开选项",
+                contentDescription = localizedUiText("展开选项"),
                 tint = MaterialTheme.colorScheme.onSurface,
             )
         }

@@ -1,5 +1,7 @@
 package top.apricityx.workshop.ui.screen
 
+import top.apricityx.workshop.ui.localizedUiText
+
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -42,7 +44,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import top.apricityx.workshop.ui.LocalizedText as Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -675,6 +677,7 @@ private fun WorkshopScreenScene(
                     onFrontendModeSelected = actions.onUpdateFrontendMode,
                     onThemeModeSelected = actions.onUpdateThemeMode,
                     onSteamLanguagePreferenceSelected = actions.onUpdateSteamLanguagePreference,
+                    onAppLanguageSelected = actions.onUpdateAppLanguage,
                     onOpenBaiduTranslationApiKeyScreen = actions.onOpenBaiduTranslationApiKeyScreen,
                     onAutoCheckUpdatesChanged = actions.onUpdateAutoCheckUpdates,
                     onPreferredUpdateSourceSelected = actions.onUpdatePreferredUpdateSource,
@@ -786,7 +789,7 @@ private fun LegacyWorkshopTopBar(
                     IconButton(onClick = actions.onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "返回",
+                            contentDescription = localizedUiText("返回"),
                         )
                     }
                 }
@@ -805,7 +808,7 @@ private fun LegacyWorkshopTopBar(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Download,
-                                contentDescription = "下载中心",
+                                contentDescription = localizedUiText("下载中心"),
                             )
                         }
                     }
@@ -815,7 +818,7 @@ private fun LegacyWorkshopTopBar(
                     IconButton(onClick = actions.onNavigateToAddGame) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "添加游戏",
+                            contentDescription = localizedUiText("添加游戏"),
                         )
                     }
                 }
@@ -833,7 +836,7 @@ private fun LegacyWorkshopTopBar(
                     ) {
                         Icon(
                             imageVector = toggleIcon,
-                            contentDescription = toggleContentDescription,
+                            contentDescription = localizedUiText(toggleContentDescription),
                         )
                     }
                 }
@@ -849,7 +852,7 @@ private fun LegacyWorkshopTopBar(
                     IconButton(onClick = actions.onNavigateToSettings) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = "设置",
+                            contentDescription = localizedUiText("设置"),
                         )
                     }
                 }
@@ -890,7 +893,7 @@ private fun WorkshopLiquidTopBar(
                 WorkshopLiquidTopBarActionButton(
                     onClick = actions.onNavigateBack,
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "返回",
+                    contentDescription = localizedUiText("返回"),
                 )
             }
 
@@ -917,7 +920,7 @@ private fun WorkshopLiquidTopBar(
                     WorkshopLiquidTopBarActionButton(
                         onClick = actions.onNavigateToDownloadCenter,
                         imageVector = Icons.Default.Download,
-                        contentDescription = "下载中心",
+                        contentDescription = localizedUiText("下载中心"),
                         badgeCount = state.downloadCenterState.activeCount,
                     )
                 }
@@ -926,7 +929,7 @@ private fun WorkshopLiquidTopBar(
                     WorkshopLiquidTopBarActionButton(
                         onClick = actions.onNavigateToAddGame,
                         imageVector = Icons.Default.Add,
-                        contentDescription = "添加游戏",
+                        contentDescription = localizedUiText("添加游戏"),
                     )
                 }
 
@@ -940,7 +943,7 @@ private fun WorkshopLiquidTopBar(
                     WorkshopLiquidTopBarActionButton(
                         onClick = actions.onToggleModLibraryDisplayMode,
                         imageVector = toggleIcon,
-                        contentDescription = toggleContentDescription,
+                        contentDescription = localizedUiText(toggleContentDescription),
                         modifier = Modifier.testTag("modLibraryDisplayModeToggle"),
                     )
                 }
@@ -956,7 +959,7 @@ private fun WorkshopLiquidTopBar(
                     WorkshopLiquidTopBarActionButton(
                         onClick = actions.onNavigateToSettings,
                         imageVector = Icons.Default.Settings,
-                        contentDescription = "设置",
+                        contentDescription = localizedUiText("设置"),
                     )
                 }
             }
@@ -973,7 +976,7 @@ private fun LegacyGameWorkshopMoreMenuButton(
         IconButton(onClick = actions.onToggleGameWorkshopMoreActions) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = "更多",
+                contentDescription = localizedUiText("更多"),
             )
         }
         GameWorkshopMoreDropdownMenu(
@@ -992,7 +995,7 @@ private fun LiquidGameWorkshopMoreMenuButton(
         WorkshopLiquidTopBarActionButton(
             onClick = actions.onToggleGameWorkshopMoreActions,
             imageVector = Icons.Default.MoreVert,
-            contentDescription = "更多",
+            contentDescription = localizedUiText("更多"),
         )
         GameWorkshopMoreDropdownMenu(
             expanded = expanded,

@@ -25,6 +25,7 @@ import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberCombinedBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import top.apricityx.workshop.AppFrontendMode
+import top.apricityx.workshop.AppLanguage
 import top.apricityx.workshop.AppThemeMode
 import top.apricityx.workshop.DownloadCenterTaskUiState
 import top.apricityx.workshop.DownloadedModEntry
@@ -113,6 +114,7 @@ data class WorkshopScreenActions(
     val onUpdateThemeMode: (AppThemeMode) -> Unit,
     val onUpdateFrontendMode: (AppFrontendMode) -> Unit,
     val onUpdateSteamLanguagePreference: (SteamLanguagePreference) -> Unit,
+    val onUpdateAppLanguage: (AppLanguage) -> Unit,
     val onOpenBaiduTranslationApiKeyScreen: () -> Unit,
     val onUpdateBaiduTranslationAppIdInput: (String) -> Unit,
     val onUpdateBaiduTranslationApiKeyInput: (String) -> Unit,

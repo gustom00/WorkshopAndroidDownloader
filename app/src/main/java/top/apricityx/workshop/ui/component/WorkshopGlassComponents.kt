@@ -1,5 +1,7 @@
 package top.apricityx.workshop.ui.component
 
+import top.apricityx.workshop.ui.localizedUiText
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -20,7 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import top.apricityx.workshop.ui.LocalizedText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -278,7 +280,7 @@ fun WorkshopGlassIconButton(
             } else {
                 Icon(
                     imageVector = imageVector,
-                    contentDescription = contentDescription,
+                    contentDescription = localizedUiText(contentDescription),
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
             }
@@ -314,7 +316,7 @@ fun WorkshopGlassIconButton(
         } else {
             Icon(
                 imageVector = imageVector,
-                contentDescription = contentDescription,
+                contentDescription = localizedUiText(contentDescription),
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.align(Alignment.Center),
             )

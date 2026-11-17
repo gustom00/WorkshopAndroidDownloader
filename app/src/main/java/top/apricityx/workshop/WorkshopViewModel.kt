@@ -602,6 +602,19 @@ class WorkshopViewModel(
         }
     }
 
+    fun updateAppLanguage(language: AppLanguage) {
+        settingsRepository.setAppLanguage(language)
+        _uiState.update { state ->
+            state.copy(
+                appLanguage = language,
+                settingsState = state.settingsState.copy(
+                    selectedAppLanguage = language,
+                    message = null,
+                ),
+            )
+        }
+    }
+
     fun updateFrontendMode(frontendMode: AppFrontendMode) {
         settingsRepository.setFrontendMode(frontendMode)
         _uiState.update { state ->
@@ -3516,6 +3529,7 @@ class WorkshopViewModel(
 
     private fun createInitialUiState(): WorkshopUiState {
         val themeMode = settingsRepository.getThemeMode()
+        val appLanguage = settingsRepository.getAppLanguage()
         val frontendMode = settingsRepository.getFrontendMode()
         val steamLanguagePreference = settingsRepository.getSteamLanguagePreference()
         val threadCount = settingsRepository.getDownloadThreadCount()
@@ -3530,6 +3544,7 @@ class WorkshopViewModel(
         val application = getApplication<Application>()
         return WorkshopUiState(
             themeMode = themeMode,
+            appLanguage = appLanguage,
             frontendMode = frontendMode,
             modLibraryState = ModLibraryUiState(
                 isLoading = true,
@@ -3545,6 +3560,7 @@ class WorkshopViewModel(
                 modUpdateConcurrentCheckCountInput = modUpdateConcurrentChecks.toString(),
                 savedModUpdateConcurrentCheckCount = modUpdateConcurrentChecks,
                 selectedThemeMode = themeMode,
+                selectedAppLanguage = appLanguage,
                 selectedFrontendMode = frontendMode,
                 selectedSteamLanguagePreference = steamLanguagePreference,
                 allowSteamAuthenticatedCleartextHttp = allowSteamAuthenticatedCleartextHttp,

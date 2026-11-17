@@ -52,6 +52,24 @@ enum class AppThemeMode(
     }
 }
 
+enum class AppLanguage(
+    val storageValue: String,
+) {
+    English("en"),
+    Indonesian("id");
+
+    companion object {
+        fun fromStorageValue(value: String): AppLanguage =
+            entries.firstOrNull { it.storageValue == value } ?: English
+    }
+}
+
+fun AppLanguage.displayName(): String =
+    when (this) {
+        AppLanguage.English -> "English"
+        AppLanguage.Indonesian -> "Bahasa Indonesia"
+    }
+
 enum class AppFrontendMode(
     val storageValue: String,
 ) {
@@ -197,6 +215,7 @@ data class WorkshopUiState(
     val currentScreen: WorkshopScreenDestination = WorkshopScreenDestination.GameLibrary,
     val previousScreen: WorkshopScreenDestination = WorkshopScreenDestination.GameLibrary,
     val themeMode: AppThemeMode = DownloadSettingsRepository.DEFAULT_THEME_MODE,
+    val appLanguage: AppLanguage = DownloadSettingsRepository.DEFAULT_APP_LANGUAGE,
     val frontendMode: AppFrontendMode = DownloadSettingsRepository.DEFAULT_FRONTEND_MODE,
     val libraryGames: List<SteamGame> = emptyList(),
     val isLibraryLoading: Boolean = true,
@@ -232,6 +251,7 @@ data class SettingsUiState(
     val modUpdateConcurrentCheckCountInput: String = "",
     val savedModUpdateConcurrentCheckCount: Int = DownloadSettingsRepository.DEFAULT_MOD_UPDATE_CONCURRENT_CHECKS,
     val selectedThemeMode: AppThemeMode = DownloadSettingsRepository.DEFAULT_THEME_MODE,
+    val selectedAppLanguage: AppLanguage = DownloadSettingsRepository.DEFAULT_APP_LANGUAGE,
     val selectedFrontendMode: AppFrontendMode = DownloadSettingsRepository.DEFAULT_FRONTEND_MODE,
     val selectedSteamLanguagePreference: SteamLanguagePreference =
         DownloadSettingsRepository.DEFAULT_STEAM_LANGUAGE_PREFERENCE,

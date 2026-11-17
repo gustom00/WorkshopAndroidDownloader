@@ -1,5 +1,7 @@
 package top.apricityx.workshop.ui.component
 
+import top.apricityx.workshop.ui.localizedUiText
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,7 +45,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import top.apricityx.workshop.ui.LocalizedText as Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -355,7 +357,7 @@ private fun MetricPillContent(
         presentation.icon?.let { icon ->
             Icon(
                 imageVector = icon,
-                contentDescription = presentation.contentDescription,
+                contentDescription = presentation.contentDescription?.let { localizedUiText(it) },
                 modifier = Modifier.size(16.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -463,21 +465,21 @@ private fun resolveMetricPillPresentation(
             MetricPillPresentation(
                 displayText = normalized,
                 icon = Icons.Default.Schedule,
-                contentDescription = "时间",
+                contentDescription = localizedUiText("时间"),
             )
 
         MetricBinarySpeedRegex.matches(normalized) ->
             MetricPillPresentation(
                 displayText = normalized,
                 icon = Icons.Default.Speed,
-                contentDescription = "速度",
+                contentDescription = localizedUiText("速度"),
             )
 
         MetricBinaryProgressRegex.matches(normalized) || MetricBinarySizeRegex.matches(normalized) ->
             MetricPillPresentation(
                 displayText = normalized,
                 icon = Icons.Default.Storage,
-                contentDescription = "大小",
+                contentDescription = localizedUiText("大小"),
             )
 
         else -> MetricPillPresentation(displayText = normalized)
